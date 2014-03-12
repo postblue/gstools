@@ -12,7 +12,7 @@ class StatisticsPlugin extends Plugin {
         $versions[] = array('name' => 'Statistics',
                             'version' => '0.1',
                             'author' => 'Stanislav "pztrn" Nikitin',
-                            'homepage' => 'http://en.pztrn.name/',
+                            'homepage' => 'https://dev.pztrn.name/projects/gnusoctools',
                             'description' =>
                             // TRANS: Plugin description.
                             _m('Display some statistics for this GNU Social instance.'));
