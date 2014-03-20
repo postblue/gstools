@@ -1,6 +1,17 @@
 <?php
 
 class StatisticsPlugin extends Plugin {
+    
+    function onAutoload($cls)
+    {
+
+        $dir = dirname(__FILE__);
+
+        include_once $dir . '/actions/statistics.php';
+        
+        return false;
+        
+    }
 
     public function onRouterInitialized($m)
     {
