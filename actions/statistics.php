@@ -46,11 +46,7 @@ class StatisticsAction extends Action
         
         // Get users count.
         $user = new User();
-        $user->query("SELECT COUNT(id) FROM user;");
-        while ($user->fetch())
-        {
-            $stats["users_count"] = $user->COUNT("id");
-        }
+        $stats["users_count"] = $user->COUNT("id");
         
         // Add all users logins and fullnames, ignoring
         // private-streamed guys.
@@ -78,11 +74,7 @@ class StatisticsAction extends Action
                 
         // Get notices count.
         $notice = new Notice();
-        $notice->query("SELECT COUNT(id) FROM notice;");
-        while ($notice->fetch())
-        {
-            $stats["notices_count"] = $notice->COUNT("id");
-        }
+        $stats["notices_count"] = $notice->COUNT("id");
         
         // Fill with plugins :)
         $stats["plugins"] = array();
