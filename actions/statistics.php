@@ -51,24 +51,31 @@ class StatisticsAction extends Action
         // Add all users logins and fullnames, ignoring
         // private-streamed guys.
         $user = new User();
-        $user->query("SELECT user.id, user.nickname, profile.fullname FROM user JOIN profile ON profile.id=user.id WHERE user.private_stream=0;");
+        $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio, COUNT(notice.id) as notice_count, (SELECT created FROM notice WHERE profile_id=user.id ORDER BY id DESC LIMIT 1) as last_notice FROM user JOIN profile ON profile.id=user.id JOIN notice ON notice.profile_id=user.id WHERE user.private_stream=0;");
         while ($user->fetch())
         {
             $stats["users"][$user->nickname] = array(
                                                 "id" => $user->id,
                                                 "nickname" => $user->nickname,
-                                                "fullname" => $user->fullname
+                                                "fullname" => $user->fullname,
+                                                "bio" => $user->bio,
+                                                "notices" => $user->notice_count,
+                                                "last_notice_on" => $user->last_notice
                                                 );
         }
         
         // Add local groups.
         $group = new Local_group();
-        $group->query("SELECT * FROM local_group;");
+        $group->query("SELECT user_group.id, user_group.nickname, user_group.fullname, user_group.homepage, user_group.description, (SELECT COUNT(group_inbox.notice_id) FROM group_inbox WHERE group_inbox.group_id=user_group.id) as notices_count FROM user_group JOIN local_group ON user_group.id=local_group.group_id;");
         while ($group->fetch())
         {
-            $stats["groups"][$group->group_id] = array(
-                                                "id" => $group->group_id,
-                                                "name" => $group->nickname
+            $stats["groups"][$group->id] = array(
+                                                "id" => $group->id,
+                                                "name" => $group->nickname,
+                                                "fullname" => $group->fullname,
+                                                "homepage" => $group->homepage,
+                                                "description" => $group->description,
+                                                "notices_count" => $group->notices_count
                                                 );
         }
                 
