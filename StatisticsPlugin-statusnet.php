@@ -21,7 +21,7 @@ class StatisticsPlugin extends Plugin {
     public function onPluginVersion(&$versions)
     {
         $versions[] = array('name' => 'Statistics',
-                            'version' => '0.1',
+                            'version' => '0.3',
                             'author' => 'Stanislav "pztrn" Nikitin',
                             'homepage' => 'https://dev.pztrn.name/projects/gnusoctools',
                             'description' =>

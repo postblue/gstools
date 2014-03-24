@@ -27,6 +27,7 @@ class StatisticsAction extends Action
         $stats["instance_name"] = common_config("site", "name");
         $stats["instance_address"] = common_config("site", "server");
         $stats["instance_with_ssl"] = common_config("site", "ssl");
+        $stats["instance_admin"] = common_config("site", "email");
         
         if (defined("GNUSOCIAL"))
         {
@@ -51,7 +52,7 @@ class StatisticsAction extends Action
         // Add all users logins and fullnames, ignoring
         // private-streamed guys.
         $user = new User();
-        $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio, COUNT(notice.id) as notice_count, (SELECT created FROM notice WHERE profile_id=user.id ORDER BY id DESC LIMIT 1) as last_notice FROM user JOIN profile ON profile.id=user.id JOIN notice ON notice.profile_id=user.id WHERE user.private_stream=0;");
+        $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio, (SELECT COUNT(notice.id) FROM notice WHERE notice.profile_id=user.id) as notices_count, (SELECT created FROM notice WHERE profile_id=user.id ORDER BY id DESC LIMIT 1) as last_notice FROM user JOIN profile ON profile.id=user.id WHERE user.private_stream=0;");
         while ($user->fetch())
         {
             $stats["users"][$user->nickname] = array(
@@ -59,7 +60,7 @@ class StatisticsAction extends Action
                                                 "nickname" => $user->nickname,
                                                 "fullname" => $user->fullname,
                                                 "bio" => $user->bio,
-                                                "notices" => $user->notice_count,
+                                                "notices" => $user->notices_count,
                                                 "last_notice_on" => $user->last_notice
                                                 );
         }
