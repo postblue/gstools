@@ -55,7 +55,14 @@ class StatisticsAction extends Action
         $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio FROM user JOIN profile ON profile.id=user.id WHERE user.private_stream=0;");
         while ($user->fetch())
         {
-            $thisuser = User::getKv('id', $user->id);
+            if (defined("GNUSOCIAL"))
+            {
+                $thisuser = User::getKv('id', $user->id);
+            }
+            else if (defined("STATUSNET"))
+            {
+                $thisuser = User::staticGet('id', $user->id);
+            }
             $stats["users"][$user->nickname] = array(
                                                 "id" => $user->id,
                                                 "nickname" => $user->nickname,
