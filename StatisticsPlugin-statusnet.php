@@ -7,10 +7,15 @@ class StatisticsPlugin extends Plugin {
 
         $dir = dirname(__FILE__);
 
-        include_once $dir . '/actions/statistics.php';
-        
-        return false;
-        
+        switch ($cls)
+        {
+        case 'StatisticsAction':
+            include_once $dir . '/actions/statistics.php';
+            return false;
+        default:
+            return true;
+        }
+
     }
 
     public function onRouterInitialized($m)

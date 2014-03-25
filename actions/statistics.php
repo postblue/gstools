@@ -52,16 +52,17 @@ class StatisticsAction extends Action
         // Add all users logins and fullnames, ignoring
         // private-streamed guys.
         $user = new User();
-        $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio, (SELECT COUNT(notice.id) FROM notice WHERE notice.profile_id=user.id) as notices_count, (SELECT created FROM notice WHERE profile_id=user.id ORDER BY id DESC LIMIT 1) as last_notice FROM user JOIN profile ON profile.id=user.id WHERE user.private_stream=0;");
+        $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio FROM user JOIN profile ON profile.id=user.id WHERE user.private_stream=0;");
         while ($user->fetch())
         {
+            $thisuser = User::getKv('id', $user->id);
             $stats["users"][$user->nickname] = array(
                                                 "id" => $user->id,
                                                 "nickname" => $user->nickname,
                                                 "fullname" => $user->fullname,
                                                 "bio" => $user->bio,
-                                                "notices" => $user->notices_count,
-                                                "last_notice_on" => $user->last_notice
+                                                "notices" => $thisuser->getProfile()->noticeCount(),
+                                                "last_notice_on" => $thisuser->getCurrentNotice()->created
                                                 );
         }
         
@@ -99,17 +100,10 @@ class StatisticsAction extends Action
         // Notice sources.
         $stats["sources"] = array();
         $notice = new Notice();
-        $notice->query("SELECT DISTINCT(source) FROM notice;");
-        //$sources = $notice->fetchAll();
+        $notice->query("SELECT source, count(id) as noticecount FROM notice WHERE is_local = '1' GROUP BY source");
         while ($notice->fetch())
         {
-            $tmpnotice = new Notice();
-            $tmpnotice->query("SELECT COUNT(id) FROM notice WHERE source='{$notice->source}' AND is_local='1';");
-            while ($tmpnotice->fetch())
-            {
-                $tmpnoticevars = get_object_vars($tmpnotice);
-                $stats["sources"][$notice->source] = $tmpnoticevars["COUNT(id)"];
-            }            
+            $stats["sources"][$notice->source] = $notice->noticecount; 
         }
         
         // Afterall, print this. In json.
