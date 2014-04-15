@@ -20,6 +20,10 @@ addPlugin("Statistics");
 
 To check for proper plugin installation, go to http://your_instance_address/main/statistics. If everything is ok - you will see JSON output.
 
+# Note to StatusNet users
+
+You should rename StatisticsPlugin-statusnet.php to StatisticsPlugin.php, because original StatisticsPlugin.php was developed for GNU Social and WILL NOT WORK for StatusNet. You are warned.
+
 # What this for?
 
 This plugin is a **requirement** if you want to be listed on http://gstools.org/, because there is no possibility to get required data without this plugin.
