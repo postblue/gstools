@@ -12,7 +12,7 @@ class StatisticsPlugin extends Plugin {
         case 'StatisticsAction':
             include_once $dir . '/actions/statistics.php';
             return false;
-        case 'StatisticsVersionAction':
+        case 'StatisticsversionAction':
             include_once $dir . '/actions/statisticsversion.php';
             return false;
         default:
@@ -30,7 +30,7 @@ class StatisticsPlugin extends Plugin {
     public function onPluginVersion(&$versions)
     {
         $versions[] = array('name' => 'Statistics',
-                            'version' => '0.4',
+                            'version' => '0.5',
                             'author' => 'Stanislav "pztrn" Nikitin',
                             'homepage' => 'https://dev.pztrn.name/projects/gnusoctools',
                             'description' =>

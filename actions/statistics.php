@@ -26,8 +26,17 @@ class StatisticsAction extends Action
         // Inserting some vital stats.
         $stats["instance_name"] = common_config("site", "name");
         $stats["instance_address"] = common_config("site", "server");
-        $stats["instance_with_ssl"] = common_config("site", "ssl");
+        if (common_config("site", "ssl") == "never")
+        {
+            $stats["instance_with_ssl"] = "0";
+        }
+        else
+        {
+            $stats["instance_with_ssl"] = "1";
+        }
         $stats["instance_admin"] = common_config("site", "email");
+        // Instance type: open, closed, etc.
+        $stats["instance_type"] = common_config("site", "profile");
 
         if (defined("GNUSOCIAL"))
         {
@@ -35,7 +44,7 @@ class StatisticsAction extends Action
         }
         else if (defined("STATUSNET"))
         {
-            $stats["instance_version"] = 'Status.Net-' . STATUSNET_VERSION;
+            $stats["instance_version"] = 'StatusNet-' . STATUSNET_VERSION;
         }
         else
         {

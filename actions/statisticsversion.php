@@ -2,7 +2,7 @@
 
 if (!defined("GNUSOCIAL") && !defined("STATUSNET")) { exit(1); }
 
-class StatisticsVersionAction extends Action
+class StatisticsversionAction extends Action
 {
 
     var $plugins = array();
