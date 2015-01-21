@@ -65,30 +65,22 @@ class StatisticsAction extends Action
         // Add all users logins and fullnames, ignoring
         // private-streamed guys.
         $user = new User();
-        $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio FROM user JOIN profile ON profile.id=user.id WHERE user.private_stream=0;");
-        while ($user->fetch())
+        $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio, COUNT(notice.id) as notice_count, notice.created AS notice_created FROM user JOIN profile ON profile.id=user.id JOIN notice ON notice.profile_id=user.id WHERE user.private_stream=0 GROUP BY user.id");
+        while($user->fetch())
         {
-            if (defined("GNUSOCIAL"))
-            {
-                $thisuser = User::getKv('id', $user->id);
-            }
-            else if (defined("STATUSNET"))
-            {
-                $thisuser = User::staticGet('id', $user->id);
-            }
             $stats["users"][$user->nickname] = array(
                                                 "id" => $user->id,
                                                 "nickname" => $user->nickname,
                                                 "fullname" => $user->fullname,
                                                 "bio" => $user->bio,
-                                                "notices" => $thisuser->getProfile()->noticeCount(),
-                                                "last_notice_on" => $thisuser->getCurrentNotice()->created
+                                                "notices" => $user->notice_count,
+                                                "last_notice_on" => $user->notice_created,
                                                 );
         }
 
         // Add local groups.
         $group = new Local_group();
-        $group->query("SELECT user_group.id, user_group.nickname, user_group.fullname, user_group.homepage, user_group.description, (SELECT COUNT(group_inbox.notice_id) FROM group_inbox WHERE group_inbox.group_id=user_group.id) as notices_count FROM user_group JOIN local_group ON user_group.id=local_group.group_id;");
+        $group->query("SELECT user_group.id, user_group.nickname, user_group.fullname, user_group.homepage, user_group.description, (SELECT COUNT(group_inbox.notice_id) FROM group_inbox WHERE group_inbox.group_id=user_group.id) as notices_count FROM user_group JOIN local_group ON user_group.id=local_group.group_id GROUP BY user_group.id");
         while ($group->fetch())
         {
             $stats["groups"][$group->id] = array(
