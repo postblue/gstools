@@ -65,7 +65,7 @@ class StatisticsAction extends Action
         // Add all users logins and fullnames, ignoring
         // private-streamed guys.
         $user = new User();
-        $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio, COUNT(notice.id) as notice_count, notice.created AS notice_created FROM user JOIN profile ON profile.id=user.id JOIN notice ON notice.profile_id=user.id WHERE user.private_stream=0 GROUP BY user.id");
+        $user->query("SELECT user.id, user.nickname, profile.fullname, profile.bio, COUNT(notice.id) as notice_count, notice.created AS notice_created FROM user JOIN profile ON profile.id=user.id LEFT JOIN notice ON notice.profile_id=user.id WHERE user.private_stream=0 GROUP BY user.id;");
         while($user->fetch())
         {
             $stats["users"][$user->nickname] = array(
