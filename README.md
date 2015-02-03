@@ -29,3 +29,10 @@ You should rename StatisticsPlugin-statusnet.php to StatisticsPlugin.php, becaus
 This plugin is a **requirement** if you want to be listed on http://gstools.org/, because there is no possibility to get required data without this plugin.
 
 On gstools.org side, there is a special script, which will fetch data, provided with this plugin. All data will be accessible thru web interface with searching abilities.
+
+# Thanks to
+
+Special thanks to this people:
+
+* hannes2peer@quitter.se - for SQL queries optimizations
+* mmn@social.umeahackerspace.se - for more SQL queries optimizations and general suggestions
